@@ -17,6 +17,11 @@ public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
 
     @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
     public User update(User updateUser) {
 
         User user = userRepository.findById(updateUser.getId()).orElseThrow(() -> new NotFoundException("User not found"));

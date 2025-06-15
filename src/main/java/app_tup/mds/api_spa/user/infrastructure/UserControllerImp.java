@@ -3,8 +3,10 @@ package app_tup.mds.api_spa.user.infrastructure;
 import app_tup.mds.api_spa.exception.domain.NotFoundException;
 import app_tup.mds.api_spa.user.domain.User;
 import app_tup.mds.api_spa.user.domain.UserService;
+import app_tup.mds.api_spa.user.infrastructure.dto.UserRequest;
 import app_tup.mds.api_spa.user.infrastructure.dto.UserResponse;
 import app_tup.mds.api_spa.user.infrastructure.mapper.UserMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,20 @@ public class UserControllerImp implements UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+
+    @PostMapping
+    @Override
+    public ResponseEntity<UserResponse> save(@RequestBody UserRequest userRequest) {
+
+        User user = userMapper.userRequestToUser(userRequest);
+
+        User saved = userService.save(user);
+
+        UserResponse userResponse = userMapper.userToUserResponse(saved);
+
+        return ResponseEntity.ok(userResponse);
+
+    }
 
     @GetMapping("/{id}")
     @Override
@@ -43,7 +59,7 @@ public class UserControllerImp implements UserController {
 
     @PutMapping
     @Override
-    public ResponseEntity<UserResponse> update(@RequestBody UserResponse userResponse) {
+    public ResponseEntity<UserResponse> update(@Valid @RequestBody UserResponse userResponse) {
 
         User user = userMapper.userResponseToUser(userResponse);
 

@@ -17,6 +17,7 @@ public class UserRequest {
     private String firstname;
     private String lastname;
     private String email;
+    private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
 
