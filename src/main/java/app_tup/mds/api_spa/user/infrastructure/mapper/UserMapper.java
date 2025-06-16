@@ -13,6 +13,12 @@ import org.mapstruct.MappingConstants;
 public interface UserMapper {
 
     User userEntityToUser(UserEntity userEntity);
+
+    @Mapping(source = "firstname", target = "firstname")
+    @Mapping(source = "lastname", target = "lastname")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "password", target = "password")
+    @Mapping(source = "role", target = "role")
     UserEntity userToUserEntity(User user);
     UserResponse userToUserResponse(User user);
     User userResponseToUser(UserResponse userResponse);
@@ -23,6 +29,8 @@ public interface UserMapper {
     @Mapping(source = "password", target = "password")
     User userRequestToUser(UserRequest userRequest);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "role", constant = "USER")
     User registerRequestToUser(RegisterRequest registerRequest);
 
 }
