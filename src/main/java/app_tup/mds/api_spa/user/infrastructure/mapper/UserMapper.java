@@ -1,6 +1,6 @@
 package app_tup.mds.api_spa.user.infrastructure.mapper;
 
-import app_tup.mds.api_spa.authentication.infrastructure.RegisterRequest;
+import app_tup.mds.api_spa.authentication.infrastructure.dto.RegisterRequest;
 import app_tup.mds.api_spa.user.domain.User;
 import app_tup.mds.api_spa.user.infrastructure.dto.UserRequest;
 import app_tup.mds.api_spa.user.infrastructure.dto.UserResponse;
