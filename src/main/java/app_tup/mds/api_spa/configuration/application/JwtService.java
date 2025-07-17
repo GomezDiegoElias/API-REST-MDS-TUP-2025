@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,8 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
     private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
-    private static final long TOKEN_EXPIRATION = 1000 * 60 * 60 * 24; // 24 horas -> 1 dia
-    private static final long REFRESH_WINDOW = 1000 * 60 * 60 * 24 * 7; // 148 horas -> 7 dias
+    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15; // 15 minutes
+    private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 148 horas -> 7 dias
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -30,20 +31,25 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateAccessToken(Map<String, Object> claims, UserDetails userDetails) {
+        return generateToken(claims, userDetails, ACCESS_TOKEN_EXPIRATION);
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails, REFRESH_TOKEN_EXPIRATION);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails
+            UserDetails userDetails,
+            long expiration
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -88,17 +94,18 @@ public class JwtService {
             Date expiration = claims.getExpiration();
             long currentTime = System.currentTimeMillis();
             return expiration.before(new Date(currentTime)) &&
-                    expiration.getTime() + REFRESH_WINDOW > currentTime;
+                    expiration.getTime() + REFRESH_TOKEN_EXPIRATION > currentTime;
         } catch (Exception e) {
             return false;
         }
     }
 
+    // Renovar token
     public String renewToken(String token, UserDetails userDetails) {
         if (!canTokenBeRenewed(token)) {
-            throw new IllegalArgumentException("The JWT couldn't be renewed");
+            throw new IllegalArgumentException("The JWT couldn't be renewed"); // No se pudo renovar el token
         }
-        return generateToken(userDetails);
+        return generateAccessToken(new HashMap<>(), userDetails);
     }
 
 
