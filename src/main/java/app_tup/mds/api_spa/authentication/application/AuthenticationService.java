@@ -17,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +40,7 @@ public class AuthenticationService {
 
         User user = userMapper.registerRequestToUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.USER);
         UserEntity userSaved = userMapper.userToUserEntity(userRepository.save(user));
 
         Map<String, Object> extraClaims = new HashMap<>();
@@ -81,14 +81,12 @@ public class AuthenticationService {
         UserEntity user = userMapper.userToUserEntity(userExisting);
 
         Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("dni", user.getDni());
         extraClaims.put("userId", user.getId());
         extraClaims.put("role", user.getRole());
         extraClaims.put("app", "api-mds-hexagonal");
 
-        String accessToken = jwtService.generateAccessToken(
-                extraClaims,
-                user
-        );
+        String accessToken = jwtService.generateAccessToken(extraClaims, user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
         return AuthenticationResponse.builder()
@@ -114,14 +112,12 @@ public class AuthenticationService {
             if (!jwtService.isTokenValid(refreshToken, user)) throw new IllegalArgumentException("Refresh token is invalid or expired");
 
             Map<String, Object> extraClaims = new HashMap<>();
+            extraClaims.put("dni", user.getDni());
             extraClaims.put("userId", user.getId());
             extraClaims.put("role", user.getRole());
             extraClaims.put("app", "api-mds-hexagonal");
 
-            String accessToken = jwtService.generateAccessToken(
-                    extraClaims,
-                    user
-            );
+            String accessToken = jwtService.generateAccessToken(extraClaims, user);
             // Opcional si queremos generar un nuevo refresh token (rotacion de tokens)
             String newRefreshToken = jwtService.generateRefreshToken(user);
 

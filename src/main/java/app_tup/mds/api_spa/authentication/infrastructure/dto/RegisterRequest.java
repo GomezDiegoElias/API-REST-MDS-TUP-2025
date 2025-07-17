@@ -3,6 +3,7 @@ package app_tup.mds.api_spa.authentication.infrastructure.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,10 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
+
+    @NotNull(message = "The dni is mandatory")
+    @Positive(message = "DNI must be a positive number")
+    private long dni;
 
     @NotNull(message = "The firstname is mandatory")
     @NotBlank(message = "The firstname is mandatory")

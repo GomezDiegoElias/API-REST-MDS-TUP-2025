@@ -19,8 +19,15 @@ public interface UserMapper {
     @Mapping(source = "email", target = "email")
     @Mapping(source = "password", target = "password")
     @Mapping(source = "role", target = "role")
+    @Mapping(source = "id", target = "id")
     UserEntity userToUserEntity(User user);
+
+    @Mapping(source = "dni", target = "dni")
+    @Mapping(source = "id", target = "id")
     UserResponse userToUserResponse(User user);
+
+    @Mapping(source = "dni", target = "dni")
+    @Mapping(source = "id", target = "id")
     User userResponseToUser(UserResponse userResponse);
 
     @Mapping(source = "firstname", target = "firstname")
@@ -30,7 +37,9 @@ public interface UserMapper {
     User userRequestToUser(UserRequest userRequest);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "role", constant = "USER")
+    //@Mapping(target = "role", constant = "USER")
+    @Mapping(target = "role", ignore = true)
+    @Mapping(source = "dni", target = "dni")
     User registerRequestToUser(RegisterRequest registerRequest);
 
 }
