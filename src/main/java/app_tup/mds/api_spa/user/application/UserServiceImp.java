@@ -4,6 +4,7 @@ import app_tup.mds.api_spa.exception.domain.NotFoundException;
 import app_tup.mds.api_spa.user.domain.User;
 import app_tup.mds.api_spa.user.domain.UserRepository;
 import app_tup.mds.api_spa.user.domain.UserService;
+import app_tup.mds.api_spa.user.infrastructure.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
