@@ -37,7 +37,7 @@ public class UserControllerImp implements UserController {
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<UserResponse> findById(@PathVariable Long id) throws NotFoundException {
+    public ResponseEntity<UserResponse> findById(@PathVariable String id) throws NotFoundException {
 
         User user = userService.findById(id);
 

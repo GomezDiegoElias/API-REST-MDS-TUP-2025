@@ -10,8 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -22,8 +25,11 @@ import java.util.List;
 public class UserEntity implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(length = 50, updatable = false, nullable = false)
+    private String id;
+
+    @Column(unique = true, nullable = false)
+    private long dni;
 
     @Column(name = "first_name", nullable = false)
     private String firstname;
@@ -34,10 +40,12 @@ public class UserEntity implements UserDetails {
     @Column(unique = true)
     private String email;
 
+    @Column(nullable = false, length = 250)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(name = "role_name", nullable = false)
+    private Role role = Role.USER;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -72,6 +80,16 @@ public class UserEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @PrePersist
+    public void generateId() {
+        if (this.id == null) {
+            String timestamp = LocalDateTime.now()
+                    .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+            String uuidPart = UUID.randomUUID().toString().substring(0, 8);
+            this.id = "usr_" + timestamp + "_" + uuidPart;
+        }
     }
 
 }

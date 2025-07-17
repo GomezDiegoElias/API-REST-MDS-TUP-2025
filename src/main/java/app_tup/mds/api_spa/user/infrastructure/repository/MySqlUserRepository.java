@@ -25,7 +25,7 @@ public class MySqlUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(String id) {
         return springUserRepository.findById(id).map(userMapper::userEntityToUser);
     }
 

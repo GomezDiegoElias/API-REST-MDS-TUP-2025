@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface UserRepository {
 
     User save(User userEntity);
-    Optional<User> findById(Long id);
+    Optional<User> findById(String id);
     List<User> findAll();
     Optional<User> findByEmail(String email);
     Boolean existsByEmail(String email);
