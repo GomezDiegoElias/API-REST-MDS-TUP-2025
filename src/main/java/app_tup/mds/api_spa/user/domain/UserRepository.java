@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-
-    User save(User userEntity);
-    Optional<User> findById(String id);
     List<User> findAll();
+    Optional<User> findByDni(long dni);
     Optional<User> findByEmail(String email);
-    Boolean existsByEmail(String email);
-    void deleteById(Long id);
+    User save(User user);
+    void deleteByDni(long dni);
 
+    // Optional<User> findById(String id);
+    // User update(User user);
+    // Boolean existsByEmail(String email);
 }

@@ -17,33 +17,35 @@ public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User save(User user) {
-        return userRepository.save(user);
-    }
-
-    @Override
-    public User update(User updateUser) {
-
-        User user = userRepository.findById(updateUser.getId()).orElseThrow(() -> new NotFoundException("User not found"));
-
-        BeanUtils.copyProperties(updateUser, user, "role");
-
-        return userRepository.save(user);
-
-    }
-
-    @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
     @Override
-    public User findById(String id) {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+    public User findByDni(long dni) {
+        return userRepository.findByDni(dni).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override
-    public void delete(Long id) {
-        userRepository.deleteById(id);
+    public User save(User user) {
+        return userRepository.save(user);
     }
+
+    @Override
+    public void delete(long dni) {
+        userRepository.deleteByDni(dni);
+    }
+
+    /*@Override
+    public User update(User updateUser) {
+        User user = userRepository.findById(updateUser.getId()).orElseThrow(() -> new NotFoundException("User not found"));
+        BeanUtils.copyProperties(updateUser, user, "role");
+        return userRepository.save(user);
+    }*/
+
+    /*@Override
+    public User findById(String id) {
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+    }*/
+
 }
