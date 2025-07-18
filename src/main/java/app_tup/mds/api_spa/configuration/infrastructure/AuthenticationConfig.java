@@ -25,6 +25,10 @@ public class AuthenticationConfig {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    // De momento
+    // No se esta haciendo uso de estos Beans
+    // Se esta autenticando de manera manual
+    // A futuro se deberia hacer uso de estos
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -32,6 +36,7 @@ public class AuthenticationConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

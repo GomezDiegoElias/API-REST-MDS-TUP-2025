@@ -1,5 +1,7 @@
 package app_tup.mds.api_spa.user.domain;
 
+import app_tup.mds.api_spa.user.infrastructure.entity.UserEntity;
+
 import java.util.List;
 
 public interface UserService {

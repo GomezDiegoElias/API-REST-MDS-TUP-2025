@@ -12,14 +12,16 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
+    @Mapping(target = "password", source = "hash")
     User userEntityToUser(UserEntity userEntity);
 
     @Mapping(source = "firstname", target = "firstname")
     @Mapping(source = "lastname", target = "lastname")
     @Mapping(source = "email", target = "email")
-    @Mapping(source = "password", target = "password")
     @Mapping(source = "role", target = "role")
     @Mapping(source = "id", target = "id")
+    @Mapping(target = "hash", source = "password")
+    @Mapping(target = "salt", source = "salt")
     UserEntity userToUserEntity(User user);
 
     @Mapping(source = "dni", target = "dni")

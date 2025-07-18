@@ -41,7 +41,10 @@ public class UserEntity implements UserDetails {
     private String email;
 
     @Column(nullable = false, length = 250)
-    private String password;
+    private String hash;
+
+    @Column(nullable = false, length = 250)
+    private String salt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role_name", nullable = false)
@@ -59,7 +62,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return hash;
     }
 
     @Override
