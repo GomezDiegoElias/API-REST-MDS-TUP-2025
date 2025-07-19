@@ -2,7 +2,7 @@ package app_tup.mds.api_spa.user.infrastructure.repository;
 
 import app_tup.mds.api_spa.exception.domain.NotFoundException;
 import app_tup.mds.api_spa.user.domain.User;
-import app_tup.mds.api_spa.user.domain.UserRepository;
+import app_tup.mds.api_spa.user.domain.IUserRepository;
 import app_tup.mds.api_spa.user.infrastructure.entity.UserEntity;
 import app_tup.mds.api_spa.user.infrastructure.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class MySqlUserRepository implements UserRepository {
+public class MySqlIUserRepository implements IUserRepository {
 
     private final SpringUserRepository springUserRepository;
     private final UserMapper userMapper;
@@ -42,7 +42,7 @@ public class MySqlUserRepository implements UserRepository {
 
     @Override
     public void deleteByDni(long dni) {
-        UserEntity user = springUserRepository.findByDni(dni).orElseThrow(() -> new NotFoundException("User not found"));
+        UserEntity user = springUserRepository.findByDni(dni).orElseThrow(() -> new NotFoundException("User does not exist with DNI: " + dni));
         springUserRepository.delete(user);
     }
 

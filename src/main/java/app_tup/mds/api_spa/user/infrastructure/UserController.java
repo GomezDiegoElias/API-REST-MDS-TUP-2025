@@ -2,7 +2,7 @@ package app_tup.mds.api_spa.user.infrastructure;
 
 import app_tup.mds.api_spa.exception.domain.NotFoundException;
 import app_tup.mds.api_spa.user.domain.User;
-import app_tup.mds.api_spa.user.domain.UserService;
+import app_tup.mds.api_spa.user.domain.IUserService;
 import app_tup.mds.api_spa.user.infrastructure.dto.UserRequest;
 import app_tup.mds.api_spa.user.infrastructure.dto.UserResponse;
 import app_tup.mds.api_spa.user.infrastructure.mapper.UserMapper;
@@ -13,17 +13,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Tag(name = "User", description = "User endpoints")
+//@PreAuthorize("hasRole('ADMIN')")
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController implements IUserController {
 
-    private final UserService userService;
+    private final IUserService userService;
     private final UserMapper userMapper;
 
     @Operation(
@@ -43,6 +45,7 @@ public class UserController implements IUserController {
                     )
             }
     )
+    //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     @Override
     public ResponseEntity<List<UserResponse>> findAll() {

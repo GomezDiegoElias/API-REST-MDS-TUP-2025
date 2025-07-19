@@ -3,7 +3,7 @@ package app_tup.mds.api_spa.user.domain;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository {
+public interface IUserRepository {
     List<User> findAll();
     Optional<User> findByDni(long dni);
     Optional<User> findByEmail(String email);

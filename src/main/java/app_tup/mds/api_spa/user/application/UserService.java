@@ -1,21 +1,21 @@
 package app_tup.mds.api_spa.user.application;
 
 import app_tup.mds.api_spa.exception.domain.NotFoundException;
+import app_tup.mds.api_spa.user.domain.IUserService;
 import app_tup.mds.api_spa.user.domain.User;
-import app_tup.mds.api_spa.user.domain.UserRepository;
-import app_tup.mds.api_spa.user.domain.UserService;
-import app_tup.mds.api_spa.user.infrastructure.entity.UserEntity;
+import app_tup.mds.api_spa.user.domain.IUserRepository;
+import app_tup.mds.api_spa.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImp implements UserService {
+public class UserService implements IUserService {
 
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
 
     @Override
     public List<User> findAll() {
@@ -23,13 +23,25 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User findByDni(long dni) {
-        return userRepository.findByDni(dni).orElseThrow(() -> new NotFoundException("User not found"));
+    public User findByDni(long dni) throws NotFoundException {
+        return userRepository.findByDni(dni).orElseThrow(() -> new NotFoundException("User does not exist with DNI: " + dni));
     }
 
     @Override
     public User save(User user) {
+
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot by empty");
+        }
+
+        String salt = PasswordUtils.generateRandomSalt();
+        String hashPassword = PasswordUtils.hashPasswordWhitSalt(user.getPassword(), salt);
+
+        user.setPassword(hashPassword);
+        user.setSalt(salt);
+
         return userRepository.save(user);
+
     }
 
     @Override

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Autenticación", description = "Controlador para la Autenticación")
+@Tag(name = "Authentication", description = "Authentication endpoints")
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -28,11 +28,11 @@ public class AuthController implements IAuthController {
     private final UserMapper userMapper;
 
     @Operation(
-            summary = "Inicio de Sesión del Usuario",
-            description = "Autentica un usuario y devuelve el token y refresh token",
-            tags = {"Autenticación"},
+            summary = "Login",
+            description = "User login",
+            tags = {"Authentication"},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Solicitud de autenticación con email y contraseña",
+                    description = "Authentication request with email and password",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
@@ -44,7 +44,7 @@ public class AuthController implements IAuthController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Has iniciado sesión correctamente",
+                            description = "You have successfully logged in",
                             content = @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(
@@ -61,11 +61,11 @@ public class AuthController implements IAuthController {
     }
 
     @Operation(
-            summary = "Registro de Usuario",
-            description = "Registrar un usuario y devolver el token de autenticación",
-            tags = {"Autenticación"},
+            summary = "Sing up user",
+            description = "Register a user and return the authentication token",
+            tags = {"Authentication"},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Solicitud de registro con dni, nombre, apellido, email, password, rol",
+                    description = "Registration application with ID, first name, last name, email, password and role",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
@@ -77,7 +77,7 @@ public class AuthController implements IAuthController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Usuario registrado exitosamente",
+                            description = "User successfully registered",
                             content = @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(

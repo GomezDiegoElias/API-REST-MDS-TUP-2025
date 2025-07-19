@@ -1,12 +1,12 @@
 package app_tup.mds.api_spa.user.domain;
 
-import app_tup.mds.api_spa.user.infrastructure.entity.UserEntity;
+import app_tup.mds.api_spa.exception.domain.NotFoundException;
 
 import java.util.List;
 
-public interface UserService {
+public interface IUserService {
     List<User> findAll();
-    User findByDni(long dni);
+    User findByDni(long dni) throws NotFoundException;
     User save(User user);
     void delete(long dni);
 
