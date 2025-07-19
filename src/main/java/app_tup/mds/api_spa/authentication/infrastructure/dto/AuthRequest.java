@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.Length;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class AuthRequest {
 
     @NotNull(message = "The email is mandatory")
     @Email(message = "The given email does not match the pattern")

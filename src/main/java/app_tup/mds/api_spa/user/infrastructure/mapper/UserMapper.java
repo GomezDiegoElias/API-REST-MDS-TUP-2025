@@ -1,6 +1,6 @@
 package app_tup.mds.api_spa.user.infrastructure.mapper;
 
-import app_tup.mds.api_spa.authentication.infrastructure.dto.RegisterRequest;
+import app_tup.mds.api_spa.authentication.infrastructure.dto.SingUpRequest;
 import app_tup.mds.api_spa.user.domain.User;
 import app_tup.mds.api_spa.user.infrastructure.dto.UserRequest;
 import app_tup.mds.api_spa.user.infrastructure.dto.UserResponse;
@@ -42,6 +42,6 @@ public interface UserMapper {
     //@Mapping(target = "role", constant = "USER")
     @Mapping(target = "role", ignore = true)
     @Mapping(source = "dni", target = "dni")
-    User registerRequestToUser(RegisterRequest registerRequest);
+    User registerRequestToUser(SingUpRequest singUpRequest);
 
 }

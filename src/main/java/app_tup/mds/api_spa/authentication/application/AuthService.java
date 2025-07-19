@@ -1,8 +1,8 @@
 package app_tup.mds.api_spa.authentication.application;
 
-import app_tup.mds.api_spa.authentication.infrastructure.dto.AuthenticationRequest;
-import app_tup.mds.api_spa.authentication.infrastructure.dto.AuthenticationResponse;
-import app_tup.mds.api_spa.authentication.infrastructure.dto.RegisterRequest;
+import app_tup.mds.api_spa.authentication.infrastructure.dto.AuthRequest;
+import app_tup.mds.api_spa.authentication.infrastructure.dto.AuthResponse;
+import app_tup.mds.api_spa.authentication.infrastructure.dto.SingUpRequest;
 import app_tup.mds.api_spa.configuration.application.JwtService;
 import app_tup.mds.api_spa.exception.domain.NotFoundException;
 import app_tup.mds.api_spa.user.domain.Role;
@@ -13,17 +13,13 @@ import app_tup.mds.api_spa.user.infrastructure.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.HexFormat;
 import java.util.Map;
@@ -31,7 +27,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -42,7 +38,7 @@ public class AuthenticationService {
     private final int saltLength = 16; // longitud para el salt
     private final int hashIterations = 10000; // numero de iteracion
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthResponse register(SingUpRequest request) {
 
         log.info("Attempting to register user with email: {}", request.getEmail());
 
@@ -79,14 +75,14 @@ public class AuthenticationService {
         String accessToken = jwtService.generateAccessToken(extraClaims, userEntity);
         String refreshToken = jwtService.generateRefreshToken(userEntity);
 
-        return AuthenticationResponse.builder()
+        return AuthResponse.builder()
                 .message("Register successfully")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthResponse authenticate(AuthRequest request) {
 
         log.info("Authentication attempt for email: {}", request.getEmail());
 
@@ -125,14 +121,14 @@ public class AuthenticationService {
         String accessToken = jwtService.generateAccessToken(extraClaims, userEntity);
         String refreshToken = jwtService.generateRefreshToken(userEntity);
 
-        return AuthenticationResponse.builder()
+        return AuthResponse.builder()
                 .message("Login successfully")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
 
-    public AuthenticationResponse refreshToken(String refreshToken) {
+    public AuthResponse refreshToken(String refreshToken) {
 
         try {
 
@@ -157,7 +153,7 @@ public class AuthenticationService {
             // Opcional si queremos generar un nuevo refresh token (rotacion de tokens)
             String newRefreshToken = jwtService.generateRefreshToken(user);
 
-            return AuthenticationResponse.builder()
+            return AuthResponse.builder()
                     .message("Refresh token successfully")
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
