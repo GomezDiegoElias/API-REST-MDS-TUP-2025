@@ -1,6 +1,7 @@
 package app_tup.mds.api_spa.user.infrastructure.repository;
 
 import app_tup.mds.api_spa.exception.domain.NotFoundException;
+import app_tup.mds.api_spa.user.domain.Role;
 import app_tup.mds.api_spa.user.domain.User;
 import app_tup.mds.api_spa.user.domain.IUserRepository;
 import app_tup.mds.api_spa.user.infrastructure.entity.UserEntity;
@@ -8,6 +9,7 @@ import app_tup.mds.api_spa.user.infrastructure.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +21,8 @@ public class MySqlIUserRepository implements IUserRepository {
     private final UserMapper userMapper;
 
     @Override
-    public List<User> findAll() {
-        return springUserRepository.findAll().stream().map(userMapper::userEntityToUser).toList();
+    public List<Object[]> findUsersPaginatedRaw(int pageIndex, int pageSize) {
+        return springUserRepository.findUsersPaginatedRaw(pageIndex, pageSize);
     }
 
     @Override

@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IUserRepository {
-    List<User> findAll();
+
+    List<Object[]> findUsersPaginatedRaw(int pageIndex, int pageSize);
     Optional<User> findByDni(long dni);
     Optional<User> findByEmail(String email);
     User save(User user);
@@ -13,4 +14,5 @@ public interface IUserRepository {
     // Optional<User> findById(String id);
     // User update(User user);
     // Boolean existsByEmail(String email);
+
 }
