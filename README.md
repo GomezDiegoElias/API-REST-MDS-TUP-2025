@@ -11,8 +11,10 @@ This REST API is built with **Java Spring Boot**, following the principles of **
 - **Spring Security** – Robust authentication and authorization implementation.
 - 
 ### Roles
-- **USER**
+- **CUSTOMER**
+- **PROFESSIONAL**
 - **ADMIN**
+- **DEVOLEPER**
 
 ## Steps to Setup
 

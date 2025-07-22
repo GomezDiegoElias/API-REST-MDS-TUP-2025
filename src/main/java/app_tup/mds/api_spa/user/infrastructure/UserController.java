@@ -42,7 +42,7 @@ public class UserController implements IUserController {
         PaginatedData<User> paginatedUsers = userService.findAll(pageIndex, pageSize);
 
         List<UserResponse> userResponses = paginatedUsers.getItems().stream()
-                .map(UserMapper::userToUserResponse)
+                .map(UserMapper::domainToUserResponse)
                 .toList();
 
         PaginatedData<UserResponse> responseData = PaginatedData.<UserResponse>builder()
@@ -67,7 +67,7 @@ public class UserController implements IUserController {
     public ResponseEntity<StandardResponse<UserResponse>> findByDni(@PathVariable long dni) throws NotFoundException {
 
         User user = userService.findByDni(dni);
-        UserResponse userDTO = UserMapper.userToUserResponse(user);
+        UserResponse userDTO = UserMapper.domainToUserResponse(user);
 
         StandardResponse<UserResponse> response = StandardResponse.<UserResponse>builder()
                 .success(true)
@@ -86,9 +86,9 @@ public class UserController implements IUserController {
     @Override
     public ResponseEntity<StandardResponse<UserResponse>> save(@RequestBody UserRequest userRequest) {
 
-        User user = UserMapper.userRequestToUser(userRequest);
+        User user = UserMapper.userRequestToDomain(userRequest);
         User saved = userService.save(user);
-        UserResponse userResponse = UserMapper.userToUserResponse(saved);
+        UserResponse userResponse = UserMapper.domainToUserResponse(saved);
 
         StandardResponse<UserResponse> response = StandardResponse.<UserResponse>builder()
                 .success(true)
@@ -125,16 +125,16 @@ public class UserController implements IUserController {
     @Override
     public ResponseEntity<UserResponse> findById(@PathVariable String id) throws NotFoundException {
         User user = userService.findById(id);
-        UserResponse userDTO = userMapper.userToUserResponse(user);
+        UserResponse userDTO = userMapper.domainToUserResponse(user);
         return ResponseEntity.ok(userDTO);
     }*/
 
     /*@PutMapping
     @Override
     public ResponseEntity<UserResponse> update(@Valid @RequestBody UserResponse userResponse) {
-        User user = userMapper.userResponseToUser(userResponse);
+        User user = userMapper.userResponseToDomain(userResponse);
         User updated = userService.update(user);
-        UserResponse updatedResponse = userMapper.userToUserResponse(updated);
+        UserResponse updatedResponse = userMapper.domainToUserResponse(updated);
         return ResponseEntity.ok(updatedResponse);
     }*/
 

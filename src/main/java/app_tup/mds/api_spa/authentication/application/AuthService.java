@@ -4,6 +4,10 @@ import app_tup.mds.api_spa.authentication.infrastructure.dto.AuthRequest;
 import app_tup.mds.api_spa.authentication.infrastructure.dto.AuthResponse;
 import app_tup.mds.api_spa.authentication.infrastructure.dto.SingUpRequest;
 import app_tup.mds.api_spa.configuration.application.JwtService;
+import app_tup.mds.api_spa.customer.domain.Customer;
+import app_tup.mds.api_spa.customer.domain.ICustomerRepository;
+import app_tup.mds.api_spa.customer.infrastructure.entity.CustomerEntity;
+import app_tup.mds.api_spa.customer.infrastructure.mapper.CustomerMapper;
 import app_tup.mds.api_spa.exception.domain.NotFoundException;
 import app_tup.mds.api_spa.user.domain.Role;
 import app_tup.mds.api_spa.user.domain.Status;
@@ -15,6 +19,7 @@ import app_tup.mds.api_spa.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -23,24 +28,23 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final IUserRepository IUserRepository;
+    private final IUserRepository userRepository;
     //private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     //private final AuthenticationManager authenticationManager;
+    private final ICustomerRepository customerRepository;
 
+    @Transactional
     public AuthResponse register(SingUpRequest request) {
 
         log.info("Attempting to register user with email: {}", request.getEmail());
 
         // Valida el email unico
-        if (IUserRepository.findByEmail(request.getEmail()).isPresent()) throw new NotFoundException("error");
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) throw new NotFoundException("error");
 
-        // Genera el salt
+        // Genera el salt y hash
         String salt = PasswordUtils.generateRandomSalt();
-        log.debug("Generated salt: {}", salt);
-
         String hashedPassword = PasswordUtils.hashPasswordWhitSalt(request.getPassword(), salt);
-        log.debug("Generated hash: {}", hashedPassword);
 
         User user = User.builder()
                 .dni(request.getDni())
@@ -49,11 +53,18 @@ public class AuthService {
                 .email(request.getEmail())
                 .password(hashedPassword)
                 .salt(salt)
+                .role(Role.CUSTOMER)
+                .status(Status.ACTIVE)
                 .build();
 
-        // Guardado del usuario
-        User savedUser = IUserRepository.save(user);
-        UserEntity userEntity = UserMapper.userToUserEntity(savedUser);
+        Customer customer = Customer.builder()
+                .user(user)
+                .phone(request.getPhone())
+                .birthdate(request.getBirthdate())
+                .build();
+
+        Customer customerDomain = customerRepository.save(customer);
+        CustomerEntity savedEntity = CustomerMapper.toEntity(customerDomain);
 
         // Agregar claima
         /*Map<String, Object> extraClaims = new HashMap<>();
@@ -62,10 +73,10 @@ public class AuthService {
         extraClaims.put("app", "api-mds-hexagonal");*/
 
         // Claims por defecto
-        Map<String, Object> extraClaims = jwtService.buildDefaultClaims(userEntity);
+        Map<String, Object> extraClaims = jwtService.buildDefaultClaims(savedEntity);
 
-        String accessToken = jwtService.generateAccessToken(extraClaims, userEntity);
-        String refreshToken = jwtService.generateRefreshToken(userEntity);
+        String accessToken = jwtService.generateAccessToken(extraClaims, savedEntity);
+        String refreshToken = jwtService.generateRefreshToken(savedEntity);
 
         return AuthResponse.builder()
                 .message("Register successfully")
@@ -78,7 +89,7 @@ public class AuthService {
 
         log.info("Authentication attempt for email: {}", request.getEmail());
 
-        User user = IUserRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> {
                    log.warn("Usuario no encontrado con email: {}", request.getEmail());
                    return new NotFoundException("Credenciales invalidas");
@@ -102,7 +113,7 @@ public class AuthService {
             throw new NotFoundException("Invalid credentials"); // Credenciales incorrectas
         }*/
 
-        UserEntity userEntity = UserMapper.userToUserEntity(user);
+        UserEntity userEntity = UserMapper.toEntity(user);
 
         Map<String, Object> extraClaims = jwtService.buildDefaultClaims(userEntity);
 
@@ -124,10 +135,10 @@ public class AuthService {
 
             if (userEmail == null) throw new IllegalArgumentException("Invalid refresh token");
 
-            User userExisting = IUserRepository.findByEmail(userEmail)
+            User userExisting = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new NotFoundException("User not found"));
 
-            UserEntity user = UserMapper.userToUserEntity(userExisting);
+            UserEntity user = UserMapper.toEntity(userExisting);
 
             if (!jwtService.isTokenValid(refreshToken, user)) throw new IllegalArgumentException("Refresh token is invalid or expired");
 

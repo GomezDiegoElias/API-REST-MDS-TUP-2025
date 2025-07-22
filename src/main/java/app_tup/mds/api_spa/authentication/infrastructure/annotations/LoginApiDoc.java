@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
         description = "User login",
         tags = {"Authentication"},
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Authentication request with email and password",
+                description = "Authentication request with email and password. Role default CUSTOMER",
                 required = true,
                 content = @Content(
                         mediaType = "application/json",

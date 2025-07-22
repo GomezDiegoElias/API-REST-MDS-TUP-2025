@@ -10,7 +10,7 @@ import app_tup.mds.api_spa.user.infrastructure.entity.UserEntity;
 
 public final class UserMapper {
 
-    public static User userEntityToUser(UserEntity e) {
+    public static User toDomain(UserEntity e) {
         return User.builder()
                 .id(e.getId())
                 .dni(e.getDni())
@@ -24,7 +24,7 @@ public final class UserMapper {
                 .build();
     }
 
-    public static UserEntity userToUserEntity(User u) {
+    public static UserEntity toEntity(User u) {
         return UserEntity.builder()
                 .id(u.getId())
                 .dni(u.getDni())
@@ -38,7 +38,7 @@ public final class UserMapper {
                 .build();
     }
 
-    public static UserResponse userToUserResponse(User u) {
+    public static UserResponse domainToUserResponse(User u) {
         return UserResponse.builder()
                 .id(u.getId())
                 .dni(u.getDni())
@@ -50,7 +50,7 @@ public final class UserMapper {
                 .build();
     }
 
-    public static User userResponseToUser(UserResponse r) {
+    public static User userResponseToDomain(UserResponse r) {
         return User.builder()
                 .id(r.getId())
                 .dni(r.getDni())
@@ -62,7 +62,7 @@ public final class UserMapper {
                 .build();
     }
 
-    public static User userRequestToUser(UserRequest r) {
+    public static User userRequestToDomain(UserRequest r) {
         return User.builder()
                 .dni(r.getDni())
                 .firstname(r.getFirstname())
@@ -73,7 +73,7 @@ public final class UserMapper {
                 .build();
     }
 
-    public static User registerRequestToUser(SingUpRequest s) {
+    public static User registerRequestToDomain(SingUpRequest s) {
         return User.builder()
                 .dni(s.getDni())
                 .firstname(s.getFirstname())

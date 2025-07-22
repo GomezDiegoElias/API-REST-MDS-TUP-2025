@@ -19,7 +19,7 @@ public class AuthRequest {
     private String email;
 
     @NotNull(message = "The password is mandatory")
-    @Length(min = 3, message = "The password should be at least of 5 characters of length")
+    @Length(min = 4, message = "The password should be at least of 5 characters of length")
     private String password;
 
 }

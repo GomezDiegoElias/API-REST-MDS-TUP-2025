@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,11 +21,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
+
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
+@Entity
 @Table(name = "tbl_users")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class UserEntity implements UserDetails {
