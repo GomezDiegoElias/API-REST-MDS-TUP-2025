@@ -1,15 +1,15 @@
 # Rest API - SPRING BOOT
 
-## 🧱 Arquitectura y Tecnologías
+## 🧱 Architecture and Technologies
 
-Esta API REST está construida con **Java Spring Boot**, siguiendo los principios de la **Arquitectura Hexagonal** y el patrón **Vertical Slice Architecture**, lo que permite una mejor separación de responsabilidades, escalabilidad y facilidad de mantenimiento.
+This REST API is built with **Java Spring Boot**, following the principles of **Hexagonal Architecture** and the **Vertical Slice Architecture** pattern, allowing for better separation of responsibilities, scalability, and ease of maintenance.
 
-### 🛠️ Tecnologías principales
+### 🛠️ Main technologies
 
-- **Spring Boot** – Framework principal para la construcción de la API.
-- **Spring Data JPA** – Manejo de persistencia con una capa de acceso a datos desacoplada.
-- **Spring Security** – Implementación de autenticación y autorización robusta.
-
+- **Spring Boot** – Core framework for building the API.
+- **Spring Data JPA** – Persistence management with a decoupled data access layer.
+- **Spring Security** – Robust authentication and authorization implementation.
+- 
 ### Roles
 - **USER**
 - **ADMIN**
