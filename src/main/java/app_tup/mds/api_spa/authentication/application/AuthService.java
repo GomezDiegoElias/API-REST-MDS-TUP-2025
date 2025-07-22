@@ -6,6 +6,7 @@ import app_tup.mds.api_spa.authentication.infrastructure.dto.SingUpRequest;
 import app_tup.mds.api_spa.configuration.application.JwtService;
 import app_tup.mds.api_spa.exception.domain.NotFoundException;
 import app_tup.mds.api_spa.user.domain.Role;
+import app_tup.mds.api_spa.user.domain.Status;
 import app_tup.mds.api_spa.user.domain.User;
 import app_tup.mds.api_spa.user.domain.IUserRepository;
 import app_tup.mds.api_spa.user.infrastructure.entity.UserEntity;
@@ -14,7 +15,7 @@ import app_tup.mds.api_spa.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
+
 import java.util.Map;
 
 @Slf4j
@@ -26,7 +27,6 @@ public class AuthService {
     //private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     //private final AuthenticationManager authenticationManager;
-    private final UserMapper userMapper;
 
     public AuthResponse register(SingUpRequest request) {
 
@@ -49,12 +49,11 @@ public class AuthService {
                 .email(request.getEmail())
                 .password(hashedPassword)
                 .salt(salt)
-                .role(Role.USER)
                 .build();
 
         // Guardado del usuario
         User savedUser = IUserRepository.save(user);
-        UserEntity userEntity = userMapper.userToUserEntity(savedUser);
+        UserEntity userEntity = UserMapper.userToUserEntity(savedUser);
 
         // Agregar claima
         /*Map<String, Object> extraClaims = new HashMap<>();
@@ -103,7 +102,7 @@ public class AuthService {
             throw new NotFoundException("Invalid credentials"); // Credenciales incorrectas
         }*/
 
-        UserEntity userEntity = userMapper.userToUserEntity(user);
+        UserEntity userEntity = UserMapper.userToUserEntity(user);
 
         Map<String, Object> extraClaims = jwtService.buildDefaultClaims(userEntity);
 
@@ -128,7 +127,7 @@ public class AuthService {
             User userExisting = IUserRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new NotFoundException("User not found"));
 
-            UserEntity user = userMapper.userToUserEntity(userExisting);
+            UserEntity user = UserMapper.userToUserEntity(userExisting);
 
             if (!jwtService.isTokenValid(refreshToken, user)) throw new IllegalArgumentException("Refresh token is invalid or expired");
 

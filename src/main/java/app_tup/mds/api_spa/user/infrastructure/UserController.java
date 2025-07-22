@@ -28,7 +28,8 @@ import java.util.List;
 public class UserController implements IUserController {
 
     private final IUserService userService;
-    private final UserMapper userMapper;
+    //private final UserMapperStruct userMapper;
+    //private final UserMapper userMapper;
 
     //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @FindAllApiDoc
@@ -41,7 +42,7 @@ public class UserController implements IUserController {
         PaginatedData<User> paginatedUsers = userService.findAll(pageIndex, pageSize);
 
         List<UserResponse> userResponses = paginatedUsers.getItems().stream()
-                .map(userMapper::userToUserResponse)
+                .map(UserMapper::userToUserResponse)
                 .toList();
 
         PaginatedData<UserResponse> responseData = PaginatedData.<UserResponse>builder()
@@ -66,7 +67,7 @@ public class UserController implements IUserController {
     public ResponseEntity<StandardResponse<UserResponse>> findByDni(@PathVariable long dni) throws NotFoundException {
 
         User user = userService.findByDni(dni);
-        UserResponse userDTO = userMapper.userToUserResponse(user);
+        UserResponse userDTO = UserMapper.userToUserResponse(user);
 
         StandardResponse<UserResponse> response = StandardResponse.<UserResponse>builder()
                 .success(true)
@@ -85,9 +86,9 @@ public class UserController implements IUserController {
     @Override
     public ResponseEntity<StandardResponse<UserResponse>> save(@RequestBody UserRequest userRequest) {
 
-        User user = userMapper.userRequestToUser(userRequest);
+        User user = UserMapper.userRequestToUser(userRequest);
         User saved = userService.save(user);
-        UserResponse userResponse = userMapper.userToUserResponse(saved);
+        UserResponse userResponse = UserMapper.userToUserResponse(saved);
 
         StandardResponse<UserResponse> response = StandardResponse.<UserResponse>builder()
                 .success(true)

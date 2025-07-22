@@ -1,10 +1,7 @@
 package app_tup.mds.api_spa.user.application;
 
 import app_tup.mds.api_spa.exception.domain.NotFoundException;
-import app_tup.mds.api_spa.user.domain.IUserService;
-import app_tup.mds.api_spa.user.domain.Role;
-import app_tup.mds.api_spa.user.domain.User;
-import app_tup.mds.api_spa.user.domain.IUserRepository;
+import app_tup.mds.api_spa.user.domain.*;
 import app_tup.mds.api_spa.util.PasswordUtils;
 import app_tup.mds.api_spa.util.dto.PaginatedData;
 import app_tup.mds.api_spa.util.dto.PaginationResponse;
@@ -31,10 +28,11 @@ public class UserService implements IUserService {
                 .firstname((String) row[3])
                 .lastname((String) row[4])
                 .role(Role.valueOf((String) row[5]))
+                .status(Status.valueOf((String) row[6]))
                 .build()
         ).toList();
 
-        int totalItems = rows.isEmpty() ? 0 : ((Number) rows.get(0)[7]).intValue();
+        int totalItems = rows.isEmpty() ? 0 : ((Number) rows.get(0)[8]).intValue();
 
         PaginationResponse pagination = PaginationResponse.builder()
                 .totalItems(totalItems)

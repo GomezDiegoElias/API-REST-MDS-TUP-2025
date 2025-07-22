@@ -1,6 +1,7 @@
 package app_tup.mds.api_spa.user.infrastructure.dto;
 
 import app_tup.mds.api_spa.user.domain.Role;
+import app_tup.mds.api_spa.user.domain.Status;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
@@ -21,5 +22,7 @@ public class UserResponse {
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 }
