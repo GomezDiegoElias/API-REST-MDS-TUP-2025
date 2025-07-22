@@ -1,5 +1,6 @@
 package app_tup.mds.api_spa.configuration.application;
 
+import app_tup.mds.api_spa.user.infrastructure.entity.UserEntity;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -108,5 +109,13 @@ public class JwtService {
         return generateAccessToken(new HashMap<>(), userDetails);
     }
 
+    public Map<String, Object> buildDefaultClaims(UserEntity user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("dni", user.getDni());
+        claims.put("userId", user.getId());
+        claims.put("role", user.getRole());
+        claims.put("app", "api-mds-hexagonal");
+        return claims;
+    }
 
 }

@@ -1,10 +1,9 @@
 package app_tup.mds.api_spa.authentication.infrastructure;
 
-import app_tup.mds.api_spa.authentication.application.AuthenticationService;
-import app_tup.mds.api_spa.authentication.infrastructure.dto.AuthenticationRequest;
-import app_tup.mds.api_spa.authentication.infrastructure.dto.AuthenticationResponse;
-import app_tup.mds.api_spa.authentication.infrastructure.dto.RegisterRequest;
-import app_tup.mds.api_spa.user.domain.User;
+import app_tup.mds.api_spa.authentication.application.AuthService;
+import app_tup.mds.api_spa.authentication.infrastructure.dto.AuthRequest;
+import app_tup.mds.api_spa.authentication.infrastructure.dto.AuthResponse;
+import app_tup.mds.api_spa.authentication.infrastructure.dto.SingUpRequest;
 import app_tup.mds.api_spa.user.infrastructure.mapper.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,76 +18,78 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Authentication", description = "Authentication endpoints")
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@Tag(name = "Autenticación", description = "Controlador para la Autenticación")
-public class AuthenticationController {
+public class AuthController implements IAuthController {
 
-    private final AuthenticationService service;
+    private final AuthService service;
     private final UserMapper userMapper;
 
     @Operation(
-            summary = "Inicio de Sesión del Usuario",
-            description = "Autentica un usuario y devuelve el token y refresh token",
-            tags = {"Autenticación"},
+            summary = "Login",
+            description = "User login",
+            tags = {"Authentication"},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Solicitud de autenticación con email y contraseña",
+                    description = "Authentication request with email and password",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(
-                                    implementation = AuthenticationRequest.class
+                                    implementation = AuthRequest.class
                             )
                     )
             ),
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Has iniciado sesión correctamente",
+                            description = "You have successfully logged in",
                             content = @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(
-                                            implementation = AuthenticationResponse.class
+                                            implementation = AuthResponse.class
                                     )
                             )
                     )
             }
     )
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request) {
+    @Override
+    public ResponseEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
     @Operation(
-            summary = "Registro de Usuario",
-            description = "Registrar un usuario y devolver el token de autenticación",
-            tags = {"Autenticación"},
+            summary = "Sing up user",
+            description = "Register a user and return the authentication token",
+            tags = {"Authentication"},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Solicitud de registro con dni, nombre, apellido, email, password, rol",
+                    description = "Registration application with ID, first name, last name, email, password and role",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(
-                                    implementation = RegisterRequest.class
+                                    implementation = SingUpRequest.class
                             )
                     )
             ),
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Usuario registrado exitosamente",
+                            description = "User successfully registered",
                             content = @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(
-                                            implementation = AuthenticationResponse.class
+                                            implementation = AuthResponse.class
                                     )
                             )
                     )
             }
     )
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisterRequest request) {
+    @Override
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody SingUpRequest request) {
         return ResponseEntity.ok(service.register(request));
     }
 

@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class SingUpRequest {
 
     @NotNull(message = "The dni is mandatory")
     @Positive(message = "DNI must be a positive number")
