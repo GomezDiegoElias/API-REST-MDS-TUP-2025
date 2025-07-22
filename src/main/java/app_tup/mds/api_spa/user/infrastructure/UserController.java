@@ -3,20 +3,19 @@ package app_tup.mds.api_spa.user.infrastructure;
 import app_tup.mds.api_spa.exception.domain.NotFoundException;
 import app_tup.mds.api_spa.user.domain.User;
 import app_tup.mds.api_spa.user.domain.IUserService;
+import app_tup.mds.api_spa.user.infrastructure.annotation.DeleteApiDoc;
+import app_tup.mds.api_spa.user.infrastructure.annotation.FindAllApiDoc;
+import app_tup.mds.api_spa.user.infrastructure.annotation.FindByDniApiDoc;
+import app_tup.mds.api_spa.user.infrastructure.annotation.SaveApiDoc;
 import app_tup.mds.api_spa.user.infrastructure.dto.UserRequest;
 import app_tup.mds.api_spa.user.infrastructure.dto.UserResponse;
 import app_tup.mds.api_spa.user.infrastructure.mapper.UserMapper;
 import app_tup.mds.api_spa.util.dto.PaginatedData;
 import app_tup.mds.api_spa.util.dto.StandardResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,24 +30,8 @@ public class UserController implements IUserController {
     private final IUserService userService;
     private final UserMapper userMapper;
 
-    @Operation(
-            summary = "Find all users",
-            description = "returns all registered users",
-            tags = {"User"},
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "All users have been successfully obtained",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(
-                                            implementation = UserResponse.class
-                                    )
-                            )
-                    )
-            }
-    )
     //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @FindAllApiDoc
     @GetMapping
     @Override
     public ResponseEntity<StandardResponse<PaginatedData<UserResponse>>> findAll(
@@ -57,8 +40,7 @@ public class UserController implements IUserController {
     ) {
         PaginatedData<User> paginatedUsers = userService.findAll(pageIndex, pageSize);
 
-        List<UserResponse> userResponses = paginatedUsers.getItems()
-                .stream()
+        List<UserResponse> userResponses = paginatedUsers.getItems().stream()
                 .map(userMapper::userToUserResponse)
                 .toList();
 
@@ -69,7 +51,7 @@ public class UserController implements IUserController {
 
         StandardResponse<PaginatedData<UserResponse>> response = StandardResponse.<PaginatedData<UserResponse>>builder()
                 .success(true)
-                .message("Usuarios obtenidos correctamente")
+                .message("Users successfully obtained")
                 .data(responseData)
                 .error(null)
                 .status(HttpStatus.OK.value())
@@ -78,24 +60,7 @@ public class UserController implements IUserController {
         return ResponseEntity.ok(response);
     }
 
-
-    @Operation(
-            summary = "Find user by dni",
-            description = "returns the user by his dni",
-            tags = {"User"},
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "User successfully obtained",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(
-                                            implementation = UserResponse.class
-                                    )
-                            )
-                    )
-            }
-    )
+    @FindByDniApiDoc
     @GetMapping("/{dni}")
     @Override
     public ResponseEntity<StandardResponse<UserResponse>> findByDni(@PathVariable long dni) throws NotFoundException {
@@ -115,33 +80,7 @@ public class UserController implements IUserController {
 
     }
 
-    @Operation(
-            summary = "Save user",
-            description = "Save a new user",
-            tags = {"User"},
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Request to create a new user with dni, first name, last name, email, password, and role",
-                    required = true,
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(
-                                    implementation = UserRequest.class
-                            )
-                    )
-            ),
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "New user created successfully",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(
-                                            implementation = UserResponse.class
-                                    )
-                            )
-                    )
-            }
-    )
+    @SaveApiDoc
     @PostMapping
     @Override
     public ResponseEntity<StandardResponse<UserResponse>> save(@RequestBody UserRequest userRequest) {
@@ -162,11 +101,7 @@ public class UserController implements IUserController {
 
     }
 
-    @Operation(
-            summary = "Delete user by dni",
-            description = "Delete a user searched by their dni",
-            tags = {"User"}
-    )
+    @DeleteApiDoc
     @DeleteMapping("/{dni}")
     @Override
     public ResponseEntity<StandardResponse<?>> delete(@PathVariable long dni) throws NotFoundException {
