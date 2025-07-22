@@ -91,13 +91,13 @@ public class AuthService {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> {
-                   log.warn("Usuario no encontrado con email: {}", request.getEmail());
-                   return new NotFoundException("Credenciales invalidas");
+                   log.warn("User not found with email: {}", request.getEmail());
+                   return new NotFoundException("Invalid credentials");
                 });
 
-        if (PasswordUtils.verifyPassword(request.getPassword(), user.getPassword(), user.getSalt())) {
-            log.warn("Contraseña incorrecta para usuario: {}", request.getEmail());
-            throw new NotFoundException("Credenciales inválidas");
+        if (!PasswordUtils.verifyPassword(request.getPassword(), user.getPassword(), user.getSalt())) {
+            log.warn("Incorrect password for user: {}", request.getEmail());
+            throw new NotFoundException("Invalid credentials");
         }
 
         // Primero verifica con AuthenticationManager
