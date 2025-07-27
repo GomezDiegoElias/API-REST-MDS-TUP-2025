@@ -1,6 +1,7 @@
 package app_tup.mds.api_spa.customer.infrastructure.mapper;
 
 import app_tup.mds.api_spa.customer.domain.Customer;
+import app_tup.mds.api_spa.customer.infrastructure.dto.CustomerResponse;
 import app_tup.mds.api_spa.customer.infrastructure.entity.CustomerEntity;
 import app_tup.mds.api_spa.user.domain.User;
 import app_tup.mds.api_spa.user.infrastructure.entity.UserEntity;
@@ -31,6 +32,20 @@ public final class CustomerMapper {
                 .status(userEntity.getStatus())
                 .phone(domain.getPhone())
                 .birthdate(domain.getBirthdate())
+                .build();
+    }
+
+    public static CustomerResponse domainToCustomerResponse(Customer domain) {
+        UserEntity entity = UserMapper.toEntity(domain.getUser());
+        return CustomerResponse.builder()
+                .id(entity.getId())
+                .dni(entity.getDni())
+                .firstname(entity.getFirstname())
+                .lastname(entity.getLastname())
+                .email(entity.getEmail())
+                .phone(domain.getPhone())
+                .birthdate(domain.getBirthdate())
+                .status(entity.getStatus())
                 .build();
     }
 

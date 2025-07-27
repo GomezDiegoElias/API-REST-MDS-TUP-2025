@@ -16,7 +16,6 @@ import java.util.Optional;
 public class MySqlIUserRepository implements IUserRepository {
 
     private final SpringUserRepository repository;
-    //private final UserMapperStruct userMapper;
 
     @Override
     public List<Object[]> findUsersPaginatedRaw(int pageIndex, int pageSize) {
