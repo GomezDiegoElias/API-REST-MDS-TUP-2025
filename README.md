@@ -11,14 +11,16 @@ This REST API is built with **Java Spring Boot**, following the principles of **
 - **Spring Security** – Robust authentication and authorization implementation.
 - 
 ### Roles
-- **USER**
+- **CUSTOMER**
+- **PROFESSIONAL**
 - **ADMIN**
+- **DEVOLEPER**
 
 ## Steps to Setup
 
 ## ⚙️ Configuración
 **Requisitos**:
-   - JDK 21
+   - JDK 22+
    - Maven
 
 **1. Clone the Project**
@@ -28,14 +30,14 @@ $ git clone https://github.com/GomezDiegoElias/API-REST-MDS-TUP-2025.git
 ```
 
 **2. Create Mysql database**
-```bash
-$ create database bd_tup_mds_api
+```sql
+create database bd_tup_mds_api
 ```
 - run `src/main/resources/blogapi.sql`
 
 **2.a Create stored procedure**
 
-````
+```sql
 DELIMITER //
 
 CREATE PROCEDURE getUserPagination(
@@ -63,16 +65,17 @@ BEGIN
 END //
 
 DELIMITER ;
-````
+```
+
 
 **2.b Test the created stored procedure**
-````
+```sql
 -- Procedure call (page 1, 10 records per page)
 CALL getUserPagination(1, 10);
 
 -- Procedure call (page 2, 5 records per page)
 CALL getUserPagination(2, 5);
-````
+```
 
 **3. Change mysql username and password as per your installation**
 
@@ -91,54 +94,54 @@ Swagger Documentation <http://localhost:8080/swagger-ui/index.html>
 ## Explore Rest APIs
 
 **API Response Standard**
-````
+````text
 {
-  "success": boolean,
-  "message": string,
-  "data": object | array | null,
-  "error": object | null,
-  "status": number
+    "success": boolean,
+    "message": string,
+    "data": object | array | null,
+    "error": object | null,
+    "status": number
 }
 ````
 
 **Examples with users**
-````
+````json
 {
-  "success": true,
-  "message": "Users successfully obtained",
-  "data": {
-    "items": [
-      {
-        "id": "usr_20250717194721_fb87b56d",
-        "dni": 12345678,
-        "firstname": "Diego",
-        "lastname": "Gomez",
-        "email": "example1234@gmail.com",
-        "role": "ADMIN"
-      },
-      {
-        "id": "usr_20250717195912_5185abd1",
-        "dni": 96325874,
-        "firstname": "Valentina",
-        "lastname": "Gomez",
-        "email": "example3624@gmail.com",
-        "role": "USER"
+    "success": true,
+    "message": "Users successfully obtained",
+    "data": {
+      "items": [
+        {
+          "id": "usr_20250717194721_fb87b56d",
+          "dni": 12345678,
+          "firstname": "Diego",
+          "lastname": "Gomez",
+          "email": "example1234@gmail.com",
+          "role": "ADMIN"
+        },
+        {
+          "id": "usr_20250717195912_5185abd1",
+          "dni": 96325874,
+          "firstname": "Valentina",
+          "lastname": "Gomez",
+          "email": "example3624@gmail.com",
+          "role": "USER"
+        }
+      ],
+      "pagination": {
+        "totalItems": 8,
+        "currentPage": 1,
+        "perPage": 10,
+        "totalPages": 1
       }
-    ],
-    "pagination": {
-      "totalItems": 8,
-      "currentPage": 1,
-      "perPage": 10,
-      "totalPages": 1
-    }
-  },
-  "error": null,
-  "status": 200
+    },
+    "error": null,
+    "status": 200
 }
 ````
 
 **Error Response**
-````
+````json
 {
   "success": false,
   "message": "Something went wrong",
@@ -178,30 +181,30 @@ Test them using postman or any other rest client.
 ##### <a id="signup">Sign Up -> /api/auth/register</a>
 ```json
 {
-   "dni": 12345678, 
-   "firstName": "Diego", 
-   "lastName": "Gomez", 
-   "email": "example123@gmail.com", 
-   "password": "password123"
+    "dni": 12345678, 
+    "firstName": "Diego", 
+    "lastName": "Gomez", 
+    "email": "example123@gmail.com", 
+    "password": "password123"
 }
 ```
 
 ##### <a id="signin">Log In -> /api/auth/login</a>
 ```json
 {
-	"email": "example123@gmail.com",
-	"password": "password123"
+    "email": "example123@gmail.com",
+    "password": "password123"
 }
 ```
 
 ##### <a id="usercreate">Create User -> /api/users</a>
 ```json
 {
-   "dni": 12345678,
-   "firstname": "Valentina",
-   "lastname": "Gomez",
-   "email": "example789@gmail.com",
-   "password": "123456",
-   "role": "USER"
+    "dni": 12345678,
+    "firstname": "Valentina",
+    "lastname": "Gomez",
+    "email": "example789@gmail.com",
+    "password": "123456",
+    "role": "USER"
 }
 ```

@@ -1,28 +1,23 @@
-package app_tup.mds.api_spa.user.infrastructure.dto;
+package app_tup.mds.api_spa.customer.infrastructure.dto;
 
-import app_tup.mds.api_spa.user.domain.Role;
 import app_tup.mds.api_spa.user.domain.Status;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class UserResponse {
-
+public class CustomerResponse {
     private String id;
     private long dni;
     private String firstname;
     private String lastname;
     private String email;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String phone;
+    private LocalDate birthdate;
     @Enumerated(EnumType.STRING)
     private Status status;
-
 }

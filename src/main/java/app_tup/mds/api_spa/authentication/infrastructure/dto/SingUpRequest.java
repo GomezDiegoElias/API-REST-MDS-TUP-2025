@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -36,7 +38,11 @@ public class SingUpRequest {
 
     @NotNull(message = "The password is mandatory")
     @NotBlank(message = "The password is mandatory")
-    @Length(min = 3, message = "The password should be at least of 5 characters of length")
+    @Length(min = 4, message = "The password should be at least of 5 characters of length")
     private String password;
+
+    private String phone;
+
+    private LocalDate birthdate;
 
 }
